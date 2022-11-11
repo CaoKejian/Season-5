@@ -221,7 +221,7 @@ body{
           overflow: hidden;
         }
         img:hover{
-          transform: translate(3px,-3px);
+          transform: translate(0px,-5px);
           /* transform: translateY(-3px);
           transform: translateX(-3px); */
           transition: all .3s;
