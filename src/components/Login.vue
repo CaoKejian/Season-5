@@ -300,6 +300,7 @@ export default {
 .userxieyi span{
     font-size: 15px;
     color: #d7d7d7;
+    margin-right: 50px;
 }
 .userxieyi span>a{
     color: #434449;

@@ -18,8 +18,8 @@ export default{
         initUserInfo(state){
             state.cartTotal = 0
             state.userInfo = {
-                
-            }
+                headImg: require("@/assets/img/close.png")
+              }
         }
     },
     actions: {

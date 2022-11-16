@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["User"],{1511:function(n,e,s){"use strict";s.r(e);var t=function(){var n=this,e=n._self._c;return e("div",[n._v(" 个人中心 ")])},u=[],l={},r=l,c=s("2877"),i=Object(c["a"])(r,t,u,!1,null,null,null);e["default"]=i.exports}}]);

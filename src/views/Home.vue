@@ -149,6 +149,7 @@ export default {
 body {
   background-color: #000;
 }
+
 .swiper-container {
   float: left;
   width: 100%;

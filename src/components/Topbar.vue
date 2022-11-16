@@ -68,7 +68,7 @@ export default {
                         // 4 登录状态的切换 (登录成功之后,要显示昵称,头像, 购物车按钮...)
                         this.chanIsLogined(true);
                         // console.log(res);
-
+                        console.log(123);
                         // 登录成功之后,删除uuid和地址栏上的code
                         this.$router.push(this.$route.path)
                         
@@ -100,7 +100,6 @@ export default {
                     }
                 }
             },100)
-
         })
     },    
     computed:{
