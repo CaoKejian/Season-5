@@ -40,9 +40,9 @@
             :key="item.id"
             v-if="index < 3"
           >
-            <img :src="item.goods.img" alt="" />
-            <h3>{{ item.goods.name }}</h3>
-            <span>{{ item.goods.describe }}</span>
+            <img :src="item.img" alt="" />
+            <h3>{{ item.name }}</h3>
+            <span>{{ item.describe }}</span>
           </div>
         </div>
       </div>

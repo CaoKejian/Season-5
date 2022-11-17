@@ -48,7 +48,7 @@ export default {
         }
     },
     created(){
-        this.$nextTick().then(async()=>{
+        
             setTimeout(async()=>{
                 let mycode = this.$route.query.code
                 if(mycode){
@@ -100,7 +100,7 @@ export default {
                     }
                 }
             },100)
-        })
+        
     },    
     computed:{
       ...mapState({
@@ -125,7 +125,10 @@ export default {
         // 封装
         let token = localStorage.getItem("x-auth-token");
         if(token){
-          return false
+            this.asyncChanIsShowToast({
+            msg:"登录成功!!!",
+            type: "success"
+        });
         }
         if(!token)
           this.asyncChanIsShowToast({
