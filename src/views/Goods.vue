@@ -15,12 +15,8 @@
             </ul>
           </div>
           <div>
-            <span >按销量</i
+            <span @click="sortType = 3">按销量</i
             ></span>
-            <ul class="paixu-shop">
-              <li @click="sortType = 1">销量升序</li>
-              <li @click="sortType = 2">销量降序</li>
-            </ul>
           </div>
           <div class="input">
             <input
@@ -61,7 +57,7 @@
                 v-for="(n, index) in arrKinds"
                 :key="index"
                 :class="num2 == index ? 'active' : ''"
-                @click="kindsClick(index)"
+                @click="kindsClick(index,n.kinds)"
               >
                 {{ n.name }}
               </li>
@@ -73,7 +69,7 @@
                 v-for="(k, index) in arrPrice"
                 :key="index"
                 :class="num3 == index ? 'active' : ''"
-                @click="priceClick(index)"
+                @click="priceClick(index,k.rear)"
               >
                 {{ k.price }}
               </li>
@@ -122,27 +118,27 @@ export default {
       sortType: 2,
       keyWord: "",
       arrYear: [
-        { year: "全部" },
-        { year: "2000-2010年间",type:0 },
-        { year: "2010-2020年间" ,type:1},
-        { year: "2020年以后", type:2},
+        { year: "全部",type:0 },
+        { year: "2000-2010年间",type:1 },
+        { year: "2010-2020年间" ,type:2},
+        { year: "2020年以后", type:3},
       ],
       num1: 0,
       arrKinds: [
-        { name: "全部" },
-        { name: "白葡萄酒" },
-        { name: "红葡萄酒" },
-        { name: "威士忌" },
-        { name: "甜酒" },
+        { name: "全部" ,kinds:0},
+        { name: "白葡萄酒" ,kinds:1 },
+        { name: "红葡萄酒" ,kinds:2 },
+        { name: "威士忌" ,kinds:3 },
+        { name: "甜酒" ,kinds:4 },
       ],
       num2: 0,
       arrPrice: [
-        { price: "全部" },
-        { price: "0-500" },
-        { price: "500-1000" },
-        { price: "1000-1500" },
-        { price: "1500-3000" },
-        { price: "3000以上" },
+        { price: "全部",rear:0 },
+        { price: "0-500",rear:1  },
+        { price: "500-1000" ,rear:2 },
+        { price: "1000-1500",rear:3  },
+        { price: "1500-3000",rear:4  },
+        { price: "3000以上" ,rear:5 },
       ],
       num3: 0,
       imgGoods: [],
@@ -161,40 +157,114 @@ export default {
     window.removeEventListener("scroll", this.scrollFn);
   },
   methods: {
-    yearClick(i){
+    yearClick(i,type){
       this.num1=i
-      if(i==3){
-        this.imgGoods=this.imgGoods.filter((item)=>{
-        return item.name.slice(0,4)>2020
+      console.log(type);
+      if(type===0){
+        this.goodsSearch()
+      }
+      if(i===3){
+        setTimeout(()=>{
+          this.imgGoods=this.imgGoods.filter((item)=>{
+          return item.name.slice(0,4)>2020
         })
-      }else if(i==2){
-        this.imgGoods=this.imgGoods.filter((item)=>{
-        return item.name.slice(0,4)>2010&&item.name.slice(0,4)<=2020
+        },1)    
+      }else if(i===2){
+        this.goodsSearch()
+        setTimeout(()=>{
+          this.imgGoods=this.imgGoods.filter((item)=>{
+          return item.name.slice(0,4)>2010&&item.name.slice(0,4)<=2020
         })
-      }else if(i = 1){
-        this.imgGoods=this.imgGoods.filter((item)=>{
-        return item.name.slice(0,4)<2010&&item.name.slice(0,4)>2000
+        },1)
+        
+      }else if(i===1){
+        this.goodsSearch()
+        setTimeout(()=>{
+          this.imgGoods=this.imgGoods.filter((item)=>{
+          return item.name.slice(0,4)<2010&&item.name.slice(0,4)>2000
         })
-      }else if(i=0){
-        this.imgGoods=this.imgGoods.filter((item)=>{
-        return item.name.slice(0,4)>0
-        })
+        },1)
       }
     },
-    kindsClick(i){
+    kindsClick(i,kinds){
       this.num2 =i
-      this.imgGoods = this.imgGoods.filter((item)=>{
-        console.log(item.kinds);
-        return item.kinds =='红葡萄酒'
-      })
-
+      if(kinds===1){
+        this.goodsSearch()
+        setTimeout(()=>{
+         this.imgGoods = this.imgGoods.filter((item)=>{
+          return item.kinds ==='白葡萄酒'
+        })          
+        },1)     
+      }else if(kinds===2){
+        this.goodsSearch()
+        setTimeout(()=>{
+          this.imgGoods = this.imgGoods.filter((item)=>{
+          return item.kinds =='红葡萄酒'
+        })
+        },1)
+      }else if(kinds===3){
+        this.goodsSearch()
+        setTimeout(()=>{
+          this.imgGoods = this.imgGoods.filter((item)=>{
+          return item.kinds =='威士忌'
+        })
+        },1)
+      }else if(kinds===4){
+        this.goodsSearch()
+        setTimeout(()=>{
+          this.imgGoods = this.imgGoods.filter((item)=>{
+            return item.kinds === '甜酒'
+          })
+        },1)
+      }
+      if(kinds===0){
+        this.goodsSearch()
+      }
     },
-    priceClick(i){
+    priceClick(i,rear){
       this.num3 = i
       this.imgGoods=this.imgGoods.filter((item)=>{
         return item.price >3000
       })
-
+      if(rear===0){
+        this.goodsSearch()
+      }
+      if(rear===1){
+        this.goodsSearch()
+        setTimeout(()=>{
+          this.imgGoods=this.imgGoods.filter((item)=>{
+        return item.price >0&&item.price<=500
+      })
+        })
+      }else if(rear===2){
+        this.goodsSearch()
+          setTimeout(()=>{
+            this.imgGoods=this.imgGoods.filter((item)=>{
+            return item.price >500&&item.price<=1000
+          })
+        })
+      }else if(rear === 3){
+        this.goodsSearch()
+          setTimeout(()=>{
+            this.imgGoods=this.imgGoods.filter((item)=>{
+            return item.price >1000&&item.price<=1500
+          })
+        })
+      }else if(rear===4){
+        this.goodsSearch()
+          setTimeout(()=>{
+            this.imgGoods=this.imgGoods.filter((item)=>{
+            return item.price >1500&&item.price<=3000
+          })
+        })
+      }else if(rear===5){
+        this.goodsSearch()
+          setTimeout(()=>{
+            this.imgGoods=this.imgGoods.filter((item)=>{
+            return item.price >3000
+          })
+        })
+      }
     },
     searchButton(){
       if(this.keyWord){
@@ -227,7 +297,7 @@ export default {
   computed: {
     arrimgGoods() {
       return this.imgGoods.sort((a,b)=>{
-        return this.sortType ===1? a.price- b.price: b.price- a.price
+        return this.sortType ===1? a.price- b.price:(this.sortType===2?b.price- a.price :b.sales-a.sales) 
       })
     },
 
@@ -242,6 +312,8 @@ export default {
 * {
   vertical-align: middle;
 }
+
+
 .allgoods {
   top: 80px;
   // height: 300px;
@@ -488,6 +560,9 @@ export default {
               float: right;
               margin-right: 20px;
               color: red;
+            }
+            img{
+              pointer-events: none;
             }
           }
         }
