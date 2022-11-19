@@ -47,61 +47,93 @@ export default {
             }
         }
     },
-    created(){
+  created(){
+    
+      // 有可能在创建的时候还拿不到code,所以等页面所有工作准备完毕之后再去获取这个code
+      setTimeout(async ()=>{
         
-            setTimeout(async()=>{
-                let mycode = this.$route.query.code
-                if(mycode){
-                    let res = await WeixinLoginAPI({
-                        code:mycode
-                    })
-                    // 针对这3种情况做不同的处理
-                    if(res.code==0){
-                        console.log('微信扫码登录成功');
-                            // 1 提示登录成功
-                        this.asyncChanIsShowToast({
-                            msg:"登录成功!",
-                            type: "success"
-                        });
-                        // 3 保存token值
-                        localStorage.setItem("x-auth-token", res["x-auth-token"])
-                        // 4 登录状态的切换 (登录成功之后,要显示昵称,头像, 购物车按钮...)
-                        this.chanIsLogined(true);
-                        // console.log(res);
-                        console.log(123);
-                        // 登录成功之后,删除uuid和地址栏上的code
-                        this.$router.push(this.$route.path)
-                        
-                        // 微信登录获取信息
-                        this.asyncChanUserInfo()
-                    }else if(res.code==400){
-                        this.asyncChanIsShowToast({
-                            msg:'code失效，请重新扫码',
-                            type:"warning"
-                        })
-                        this.chanIsShowLoginModal(true)
-                    }else if(res.code==407){
-                        this.asyncChanIsShowToast({
-                            msg:'请使用手机号绑定微信',
-                            type:"warning"
-                        })
-                        this.chanIsShowLoginModal(true)
-                        localStorage.setItem("uuid",res.uuid)
-                    }
-                }else{
-                    // 
-                    let mytoken = localStorage.getItem("x-auth-token")
-                    this.chanIsLogined(Boolean(mytoken))
+        // 判断地址栏有没有code
+        let mycode = this.$route.query.code
+        console.log("code",mycode);
+        
+        if(mycode){
 
-                    if(mytoken){
-                        this.asyncChanUserInfo()
-                    }else{
-                        this.initUserInfo()
-                    }
-                }
-            },100)
+          // 发起微信扫码登录的请求
+          let res = await WeixinLoginAPI({
+            code:mycode
+          })
+
+          // 针对这3种情况做不同的处理
+          if(res.code==0){
+            // 微信扫码登录成功
+            // 1 提示登录成功
+            this.asyncChanIsShowToast({
+              msg:"登录成功!",
+              type: "success"
+            });
+            // 3 保存token值
+            localStorage.setItem("x-auth-token", res["x-auth-token"])
+            // 4 登录状态的切换 (登录成功之后,要显示昵称,头像, 购物车按钮...)
+            this.chanIsLogined(true);
+       
+            // 登录成功之后,地址栏上的code
+            this.$router.push(this.$route.path)
+
+            // 登录成功,发送获取用户信息的请求
+            this.asyncChanUserInfo()
+            
+          }else if(res.code==400){
+            // code 失效的情况
+
+            // 1 提示用户重新扫二维码
+            this.asyncChanIsShowToast({
+              msg:"code失效,请重新扫码登录",
+              type:"warning"
+            })
+            // 2 把登录框打开
+            this.chanIsShowLoginModal(true);
+          }else if(res.code==407){
+            console.log(res);
+            // {code: 407, message: '现在申请获取你微信绑定的手机号码', uuid: 'f3f816fc-afc3-435f-aaa0-c9ce849cf4c6'}
+
+            // 这个微信号,在这个网上还没有绑定手机号
+            // 绑定手机号. 怎么绑定手机号??
+            // 就让用户重新用手机号登录,而我们的登录接口调用的应该是 手机绑定微信 的接口(带上uuid)
+
+            // 1 提示用户手机号绑定微信
+            this.asyncChanIsShowToast({
+              msg:"请使用手机号绑定登录微信!",
+              type:"warning"
+            })
+            // 2 把登录框打开
+            this.chanIsShowLoginModal(true)
+            // 3 保存uuid到本地存储
+            localStorage.setItem("uuid", res.uuid)
+          }
+        }
+        else{
+          // 没有code的情况是什么情况??
+          // 1 用户没有扫码登录的操作   或者 2 在加载这个页面的时候,用户已经是登录的了
+
+          let mytoken = localStorage.getItem("x-auth-token");
+          // 根据是否有token值来更新用户的登录状态
+          this.chanIsLogined(Boolean(mytoken));
+          
+          if(mytoken){
+            this.asyncChanUserInfo()
+          }else{
+            // 没有登录的情况,把用户数据初始化
+            this.initUserInfo()
+          }
+        }
+      },100)
         
-    },    
+
+      //   }  
+      // })
+     
+      
+  },  
     computed:{
       ...mapState({
         isLogined:state=>state.loginStatus.isLogined,

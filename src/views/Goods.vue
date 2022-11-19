@@ -110,6 +110,7 @@
 import shujv2 from "../static/data.json";
 import { getScrollTop, getClientHeight, getScrollHeight } from "@/utils";
 import axios from 'axios'
+import { mapActions } from 'vuex'
 export default {
   inject: ['reload'], 
   data() {
@@ -273,22 +274,30 @@ export default {
           return p.name.indexOf(this.keyWord) !== -1;
         });
       }else if(this.keyWord == ""){
-        alert('输入不能为空')
+        this.asyncChanIsShowToast({
+            msg:"搜索不能为空哦",
+            type: "warning"
+        })
       }
     },
     async goodsSearch(){
       var datas = await shujv2;
       this.imgGoods = datas;
       // console.log(this.imgGoods);
-    }
-
+    },
+  ...mapActions({
+        asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast"
+    }),
   },
   watch:{
     keyWord:{
       handler(newval,oldval){
         if(this.keyWord===""){
           // this.reload()
-          this.$router.go(0)
+          // this.$router.go(0)
+          setTimeout(()=>{
+            this.goodsSearch()
+          },500)
         }
       },
       deep:true

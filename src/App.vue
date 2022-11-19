@@ -15,7 +15,7 @@
 import Topbar from "./components/Topbar.vue";
 import Footer from "./components/Footer.vue";
 import Login from "./components/Login";
-import Toast from "@/components/Toast";
+import Toast from "./components/Toast";
 import Return from './components/Return.vue'
 
 import { mapState } from "vuex";

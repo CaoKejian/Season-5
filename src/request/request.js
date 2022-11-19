@@ -3,7 +3,7 @@ import store from "@/store"
 
 // instance 实例 对象
 const instance = axios.create({
-  baseURL: "/api",
+  baseURL: "http://kumanxuan1.f3322.net:8881/cms",
   timeout: 5000
 })
 

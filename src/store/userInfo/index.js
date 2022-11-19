@@ -1,4 +1,4 @@
-import { UserProfilesAPI } from '../../request/api'
+import { UserProfilesAPI } from '@/request/api'
 export default{
     namespaced:true,
     state: {
@@ -18,7 +18,7 @@ export default{
         initUserInfo(state){
             state.cartTotal = 0
             state.userInfo = {
-                headImg: require("@/assets/img/close.png")
+                headImg: require("../../assets/img/logo.png")
               }
         }
     },
