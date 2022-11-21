@@ -21,3 +21,5 @@ export const BindPhoneAPI = (params) => instance.post("/wechatUsers/binding", qs
 // 获取登录用户信息
 export const UserProfilesAPI = () => instance.get("/shop/userProfiles")
 
+
+// export const GoodsDetailsAPI = () => get('../static/data.json')

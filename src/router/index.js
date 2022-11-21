@@ -31,11 +31,15 @@ const routes = [
   {
     path: '/shopcart',
     component: () => import(/* webpackChunkName: "Shopcart" */ '../views/Shopcart.vue')
+  },
+  {
+    path: '/details',
+    component: () => import(/* webpackChunkName: "details" */ '../views/Details.vue')
   }
 ]
 
 const router = new VueRouter({
-  // mode: 'history',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

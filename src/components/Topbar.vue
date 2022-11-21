@@ -127,12 +127,7 @@ export default {
           }
         }
       },100)
-        
-
-      //   }  
-      // })
-     
-      
+ 
   },  
     computed:{
       ...mapState({
@@ -235,12 +230,12 @@ export default {
                             position:absolute;
                             right:10%;
                             /* top: 5px; */
-                            line-height: 80px;
+                            /* line-height: 80px; */
                             img{
                                 z-index: 999;
-                                width: 40px;
+                                width: 56px;
                                 border-radius: 50%;
-                                height: 40px;
+                                height: 56px;
                                 padding: 20px 0;
                             }
                         }
@@ -278,6 +273,7 @@ export default {
         }
     }
 @media screen and (max-width:1200px) {
+
     .rightul{
         position: absolute;
         /* background-color: pink; */

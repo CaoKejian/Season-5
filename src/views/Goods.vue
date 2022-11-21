@@ -85,9 +85,9 @@
       </div>
       <div class="showgoods">
         <div class="show-small">
-          <ul v-for="(g, index) of arrimgGoods" :key="index">
-            <li>
-              <div><img :src="g.img" alt="" /></div>
+          <ul v-for="(g, index) of arrimgGoods" :key="g.id" >
+            <li >
+              <div @click="goToDetails(g.id)" ><img :src="g.img" alt="" /></div>
               <b>{{ g.name }}</b
               ><br /><br />
               <span>销量：{{ g.sales }} </span>
@@ -143,6 +143,7 @@ export default {
       ],
       num3: 0,
       imgGoods: [],
+      imgGoodsShow:[],
       page:0,
       size:10,
       isLoading: false, //节流
@@ -165,6 +166,7 @@ export default {
         this.goodsSearch()
       }
       if(i===3){
+        this.goodsSearch()
         setTimeout(()=>{
           this.imgGoods=this.imgGoods.filter((item)=>{
           return item.name.slice(0,4)>2020
@@ -267,6 +269,9 @@ export default {
         })
       }
     },
+    goToDetails(id){
+      this.$router.push(`/details?id=${id}`)
+    },
     searchButton(){
       if(this.keyWord){
         this.imgGoods = this.arrimgGoods.filter((p) => {
@@ -278,6 +283,11 @@ export default {
             msg:"搜索不能为空哦",
             type: "warning"
         })
+      }
+    },
+    scrollFn(){
+      if(getScrollTop()+ getClientHeight()>= getScrollHeight()-10){
+        console.log(123123);
       }
     },
     async goodsSearch(){
@@ -570,21 +580,22 @@ export default {
               margin-right: 20px;
               color: red;
             }
-            img{
-              pointer-events: none;
+            div{
+              img{
+                pointer-events: none;
+                width: 300px;
+                height: 350px;
+                border-radius: 5px;
+                filter: brightness(0.9);
+                user-select: none;
+              }
+              &:hover img{
+                background-size: 105% 105%;
+                transform: translateY(-10px);
+                transition: all 0.5s;
+                box-shadow: 0 0 20px #fff;
+              }
             }
-          }
-        }
-        img {
-          width: 300px;
-          height: 350px;
-          border-radius: 5px;
-          filter: brightness(0.9);
-          &:hover {
-            background-size: 105% 105%;
-            transform: translateY(-10px);
-            transition: all 0.5s;
-            box-shadow: 0 0 20px #fff;
           }
         }
       }
