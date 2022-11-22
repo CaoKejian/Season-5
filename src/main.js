@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import axios from "axios"
  
-
+Vue.prototype.$bus=new Vue()
 
 Vue.prototype.$axios = axios
 // 矢量图

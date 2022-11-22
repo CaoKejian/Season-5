@@ -6,27 +6,29 @@
                 <img @click="returnGo()" src="@/assets/img/return.png" alt="">
             </div>
             <div class="text">
-                <div class="goodid" >
-                    <img :src="showPic" alt="">
+                <div class="goodid" v-for="(item, index) in suggestarr" :key="index">
+                    <img :src="item.img" alt="">
                     <div class="context">
-                        <h3>{{name}}</h3>
-                        <h3>酒精浓度： {{cale}}%</h3>
-                        <h3>规格： {{ml}}ml</h3>
+                        <h3>{{item.name}}</h3>
+                        <h3>酒精浓度： {{item.alcohol}}%</h3>
+                        <h3>规格： {{item.ml}}ml</h3>
                         <br>
-                        <b>￥ {{price}}</b>
+                        <b>￥ {{item.price}}</b>
                         <hr>
                         <span>
-                            {{describe}}
+                            {{item.describe}}
                         </span>
                         <div class="shopcartadd">
-                            <div @click="stepFn(-1)">-</div>
-                            <div class="bujinqi" v-model="stepNum">{{count}}</div>
-                            <div @click="stepFn(1)">+</div>
+                            <add class="add"  :count="count"></add>
+                            <!-- <div @click="stepFn(-1)">-</div>
+                            <div class="bujinqi" :count="count">{{count}}</div>
+                            <div @click="stepFn(1)">+</div> -->
+                            <div class="addshopcart">
+                                <button @click="addToCart($event,item)">加入购物车</button>
+                                <button>立即购买</button>
+                            </div>
                         </div>
-                        <div class="addshopcart">
-                            <button @click="addToCart">加入购物车</button>
-                            <button>立即购买</button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -35,7 +37,7 @@
             <div class="suggest">
                 <h3>相关推荐</h3>
                 <ul>
-                    <li v-for="(sug,index) in suggestarr" :key="index" v-if="index<3">
+                    <li v-for="(sug,index) in randomArr" :key="index" v-if="index<3">
                         <img :src="sug.img" alt="">
                         <span>{{sug.name}}</span><br>
                         <span class="sales">销量：{{sug.sales}}</span>
@@ -85,11 +87,15 @@
 <script>
 import shujv3 from '@/static/data.json'
 import {GoodsDetailsAPI} from '@/request/api'
-import { mapActions } from 'vuex'
+import { mapActions,mapMutations, mapState } from 'vuex'
+import { getRandom } from "@/utils";
+import add from '@/components/shop/add.vue'
+import bus from '../utils/bus'
 export default {
     data(){
         return {
             suggestarr:[],
+            suggestNewarr:[],
             showPic:[],
             isShowIssue:false,
             name:'',
@@ -99,53 +105,83 @@ export default {
             describe:'',
             count:1,
             sales:"",
+            goodId:''
         }
+    },
+    props:{
+        abc:{
+            default: function(){
+                return                
+            }
+        }
+    },
+    components:{
+        add
     },
     methods:{
         ...mapActions({
             asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast"
         }),
+        ...mapMutations({
+            tocart:'addcart/tocart'
+        }),
         returnGo(){
             this.$router.go(-1)
         },
-        async addToCart(){
+        addToCart(e,item){
+            console.log('item:',item);
             let productId = this.$route.query.id
             this.asyncChanIsShowToast({
                 type:"success",
                 msg:"加入购物车成功 !"
             })
-        },
-        stepFn(val){
-            if(val==-1&&this.count<=1){
-                this.asyncChanIsShowToast({
-                type:"danger",
-                msg:"加入发生错误"
-                }) 
-            return
-            }
-            this.count+=val
+            this.$store.commit('addcart/tocart',item)
+            
+            this.$router.push({
+                path:'shopcart',
+                query:{
+                    id:productId,
+                    total:this.count
+                }
+            })
+
         },
         async goodsSearch(){
             var datas = await shujv3;
             this.suggestarr = datas;
-            let goodId = this.$route.query.id //8
+            this.suggestNewarr = datas;
+            let goodId = this.$route.query.id 
+            this.suggestarr = this.suggestarr.filter((item)=>item.id==goodId)
             // ············通过id的查找索引出现问题 待解决····································
-            let index = this.suggestarr.findIndex((item)=>item.id==goodId);
-            // console.log(typeof index);
-            // console.log("goodId:",goodId);
-            this.show = this.suggestarr[index]
-            this.showPic = this.suggestarr[index].img
-            this.name = this.show.name
-            this.price = this.show.price
-            this.describe = this.show.describe
-            this.cale = this.show.alcohol
-            this.ml = this.show.ml
-            this.sales = this.show.sales
+            // let index = this.suggestarr.findIndex((item)=>item.id==goodId);
         },
+    },
+    computed:{
+         randomArr(){
+            this.goodsSearch()
+            // 需求=> 获得当前商品的种类 √
+            //        根据当前种类的数量获得3个随机数 × （随机数通过kinds的arr来找 麻烦）
+            //        根据随机数产生这个种类的三款酒渲染上去 √
+            //        渲染三条数据
+            return this.suggestNewarr.filter((item,a,b)=>{
+                const goodId =  this.$route.query.id
+                const index = this.suggestNewarr.findIndex((item)=>item.id==goodId)
+                const kind = this.suggestNewarr[index].kinds
+                return item.kinds ==kind 
+            })
+        },
+        ...mapState({
+            
+        })
     },
     created(){
         this.goodsSearch()
+        // bus.$on('name',(productId)=>{
+        //     console.log("上车了",productId);
+        // })
+        // this.$bus.$emit('goodid',productId)
     },
+
 }
 </script>
 
@@ -171,7 +207,7 @@ export default {
         .leftbar{
             display: flex;
             flex-direction: column;
-            width: 85%;
+            width: 65%;
             .return{
                 width: 130px;
                 height: 40px;
@@ -231,6 +267,8 @@ export default {
                         }
                         span{
                             width: 500px;
+                            max-height: 180px;
+                            overflow: scroll;
                             flex-grow: 5;
                             text-indent: 2em;
                             display: block;
@@ -243,12 +281,16 @@ export default {
                         }
                         .shopcartadd{
                             display: flex;
-                            justify-content: space-around;
+                            justify-content: space-between;
+                            align-items: center;
                             width: 100px;
                             height: 30px;
-                            border: 1px solid #beb09b;
+                            // border: 1px solid #beb09b;
                             margin-top: 30px;
                             user-select: none;
+                            .add{
+                                margin-top: 5px;
+                            }
                             div{
                                 color: rgb(204, 197, 197);
                                 font-size: 50px;
@@ -269,28 +311,30 @@ export default {
                                 border-left: 1px solid #beb09b;
                                 border-right: 1px solid #beb09b;
                             }
-                        }
-                        .addshopcart{
-                            position: relative;
-                            left: 130px;
-                            bottom: 40px;
-                            button{
-                                width: 150px;
-                                margin-right: 10px;
+                            .addshopcart{
+                                margin-left: 20px;
+                                display: flex;
+                                justify-content: space-between;
                                 height: 50px;
-                                cursor: pointer;
-                                user-select: none;
-                                color: white;
-                                font-size: 18px;
-                                &:nth-child(1){
-                                    background-color: #beb09b;
+                                button{
+                                    width: 100px;
+                                    margin-right: 10px;
+                                    height: 50px;
+                                    cursor: pointer;
+                                    user-select: none;
+                                    color: white;
+                                    font-size: 18px;
+                                    &:nth-child(1){
+                                        background-color: #beb09b;
+                                    }
+                                    &:nth-child(2){
+                                        background-color: #9c0404;
+                                    }
                                 }
-                                &:nth-child(2){
-                                    background-color: #9c0404;
-                                }
-                            }
 
+                            }
                         }
+
                     }
                 }
             }
@@ -324,8 +368,8 @@ export default {
                     // float: left;
                     display: flex;
                     flex-direction: column;
-                    text-indent: -13px;
-                    text-align-last: left;
+                    // text-indent: -13px;
+                    // text-align-last: left;
                     li{
                         cursor: pointer;
                         margin-bottom: 60px;
@@ -341,6 +385,10 @@ export default {
                             margin-left: 10px;
                             // position: relative;
                             font-weight: bold;
+                            max-height: 25px;
+                            display: block;
+                            max-width: 210px;
+                            overflow: hidden;
                         }
                         .sales{
                             position: relative;

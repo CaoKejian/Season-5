@@ -29,7 +29,7 @@ export default{
             msg: payload.msg,
             type: payload.type
           });
-        }, 1500)
+        }, 2000)
       }
     },
 }

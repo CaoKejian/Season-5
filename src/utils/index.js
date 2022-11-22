@@ -27,3 +27,14 @@ export function getScrollTop(){
   export function getScrollHeight(){
     return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)
   }
+
+  // 获取随机数
+export function getRandom(){
+  const goodId =  this.$route.query.id
+  const index = this.suggestarr.findIndex((item)=>item.id==goodId)
+  const kind = this.suggestarr[index].kinds
+  const newArr = this.suggestarr.filter((item)=>{
+    return item.kinds == kind
+  })
+  const random = Math.floor(Math.random() * newArr.length) 
+}
