@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '../store'
 
 // 把这段代码直接粘贴到router/index.js中的Vue.use(VueRouter)之前
 const originalPush = VueRouter.prototype.push;
@@ -41,7 +42,28 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })
+
+// 全局导航首位 路由拦截
+// router.beforeEach((to,from,next)=>{
+//   if(to.path ==='/user'){
+//     let token = localStorage.getItem("x-auth-token")
+//     if(token){
+//       next()
+//     }else{
+//       store.dispatch("toastStatus/asyncChanIsShowToast",{
+//         msg:'请先登录',
+//         type:"warning",
+//       })
+//     }
+//     return
+//   }
+//   next()
+
+// })
 
 export default router

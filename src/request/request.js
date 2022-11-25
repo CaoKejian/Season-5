@@ -11,7 +11,7 @@ const instance = axios.create({
 instance.interceptors.request.use(config => {
   // 什么时候执行这里的代码??  在每个请求发出去之前
   // config 是什么?? 是一个对象 记录了本次请求的相关信息
-  console.log("config为:", config);
+  // console.log("config为:", config);
   // 这个函数用来做什么??  可以用来做一些请求前的准备工作,比如: 添加请求头
   
   let token = localStorage.getItem("x-auth-token");

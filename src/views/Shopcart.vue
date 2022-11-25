@@ -2,12 +2,12 @@
   <div class="wrapper">
     <div class="center">
       <div class="all">
-        <div>
+        <div v-show="!cartarr.length==0">
           <input type="checkbox">
           <span>全选</span>
         </div>
       </div>
-      <div class="shopcard">
+      <div class="shopcard" v-show="!cartarr.length==0">
           <ul >
             <li v-for="(item,index) in cartarr" :key="index">
               <input type="checkbox">
@@ -17,18 +17,21 @@
                 <span class="ml">规格： {{item.ml}}ml</span>
                 <span class="bold">￥ {{item.price}}</span>
               </div>
-              <span class="count">￥ {{  item.price }}</span>
+              <span class="count">￥ {{  item.price*count }}</span>
               <add class="add" :count="count"></add>
             </li>
           </ul>
-        
+      </div>
+      <div class="shopcreate" v-show="cartarr.length==0">
+        <img src="https://th.bing.com/th/id/OIP.uL2FtUkjoFVuhTU9WjM6_QAAAA?pid=ImgDet&rs=1" alt="">
+        <br>购物车空空如也......
       </div>
       <div>
         <div class="fake"></div>
         <div class="computed">
-          <div class="allprice">共计：<span>123</span>元</div>
+          <div class="allprice">共计：<span></span>元</div>
           <div class="button">
-            <button>删除</button>
+            <button @click="name">删除</button>
             <button>付款</button>
           </div>
         </div>
@@ -54,13 +57,11 @@ export default {
   },
   components:{add},
   methods:{
-    // name(){
-    //   let v = details.props.abc.default()
-    //   console.log(v);
-    //   let params = {
-    //     id:this.$route.query.id,
-    //   }
-    // },
+    name(){
+      let v = details.props.abc.default()
+      console.log(v);
+      
+    },
     async goodsSearch(){
       var datas = await shujv4;
       let id=this.$route.query.id
@@ -186,6 +187,17 @@ export default {
       add{
         width: 80%;
         height: 200px;
+      }
+    }
+    .shopcreate{
+      width: 100%;
+      height: 65vh;
+      font-size: 50px;
+      color: rgb(229, 222, 222);
+      img{
+        width: 500px;
+        height: 100%;
+        border-radius: 20px;
       }
     }
     .computed{

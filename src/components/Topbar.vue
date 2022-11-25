@@ -5,12 +5,12 @@
             <a href="#"></a>
         </div>
         <div class="rightbar"> 
-            <ul class="rightul" @click="hdClick()">
+            <ul class="rightul">
                 <li @click="$router.push('/home')"><i class="iconfont icon-shouye"></i><span>首页</span></li>
                 <li @click="$router.push('/goods')"><i class="iconfont icon-31quanbushangpin"></i><span>全部商品</span></li>
-                <li @click="$router.push('/user')"><i class="iconfont icon-gerenzhongxin"></i><span>个人中心</span></li>
+                <li @click="$router.push('/user')&&sign()"><i class="iconfont icon-gerenzhongxin"></i><span>个人中心</span></li>
                 <li @click="$router.push('/shopcart')"><i class="iconfont icon-gouwuche"></i><span>购物车</span></li>
-                <li>
+                <li  @click="hdClick()">
                     <button v-show="!isLogined" class="login" @click="chanIsShowLoginModal(true)">登陆 - login</button>
                     <div class="input-img" v-show="isLogined">
                         <img :src='userInfo.headImg' alt="">
@@ -147,6 +147,13 @@ export default {
         asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast",
         asyncChanUserInfo:"userInfo/asyncChanUserInfo"
       }),
+      sign(){
+        this.asyncChanIsShowToast({
+          msg:'请先登录!!',
+          type:"danger"
+        })
+        this.chanIsShowLoginModal(true)
+      },
     //   判断登陆了没
       hdClick(){
         // 封装

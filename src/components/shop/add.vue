@@ -2,7 +2,7 @@
   <div class="wrapperadd">
     <div>
         <div><img src="@/assets/img/jianhao.png" @click="handleSub" alt=""></div>
-        <input type="text" :value="count"></input>
+        <input type="text" v-model="count"></input>
         <div><img src="@/assets/img/jiahao.png" @click="handleAdd" alt=""></div>
     </div>
   </div>
@@ -13,7 +13,6 @@ import { mapActions } from 'vuex'
 export default {
   data(){
     return{
-      // count:1,
     }
   },
   props:{
@@ -38,6 +37,7 @@ export default {
         this.count++
       }
     },
+
     ...mapActions({
       asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast"
     }),

@@ -8,6 +8,7 @@
             <div class="text">
                 <div class="goodid" v-for="(item, index) in suggestarr" :key="index">
                     <img :src="item.img" alt="">
+
                     <div class="context">
                         <h3>{{item.name}}</h3>
                         <h3>酒精浓度： {{item.alcohol}}%</h3>
@@ -103,18 +104,16 @@ export default {
             ml:'',
             price:'',
             describe:'',
-            count:1,
+            count:4,
             sales:"",
             goodId:''
         }
     },
-    props:{
-        abc:{
-            default: function(){
-                return                
-            }
-        }
-    },
+    // props:{
+    //     count:{
+    //         default: 0
+    //     }
+    // },
     components:{
         add
     },
@@ -128,7 +127,7 @@ export default {
         returnGo(){
             this.$router.go(-1)
         },
-        addToCart(e,item){
+        addToCart(e,item,count){
             console.log('item:',item);
             let productId = this.$route.query.id
             this.asyncChanIsShowToast({
