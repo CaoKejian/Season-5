@@ -10,7 +10,7 @@
       <div class="shopcard" v-show="!cartData.length==0">
           <ul >
             <li v-for="(item,index) in cartData" :key="index">
-              <input type="checkbox">
+              <input type="checkbox" v-model="cartData.checked">
               <div class="goodsdetails">
                 <img :src="item.img" alt="">
                 <div class="details">
