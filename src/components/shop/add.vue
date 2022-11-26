@@ -17,7 +17,7 @@ export default {
   },
   props:{
     id:Number,
-    totalMount:Number,
+    // totalMount:Number,
     price:Number
   },
   methods:{

@@ -138,6 +138,7 @@ export default {
                 cale:data.cale,
                 ml:data.ml,
                 describe:data.describe,
+                checked:data.checked
             })
             // this.$router.push({
             //     path:'shopcart',

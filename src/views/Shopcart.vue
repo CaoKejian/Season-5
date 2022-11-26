@@ -38,7 +38,7 @@
         <div class="computed">
           <div class="allprice">共计：<span>{{totalPrice}}</span>元</div>
           <div class="button">
-            <button >删除</button>
+            <button @click="reduce()">删除</button>
             <button>付款</button>
           </div>
         </div>
@@ -52,7 +52,7 @@ import bus from "@/utils/bus"
 import details from './Details.vue'
 import shujv4 from '@/static/data.json'
 import Add from '../components/shop/add.vue'
-import {mapState} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
   name:'Shopcart',
@@ -64,7 +64,19 @@ export default {
     Add
   },
   methods:{
-
+    reduce(){
+      if(!this.cartData){
+        this.cartData = this.cartData.splice(0,1)
+      }else{
+        this.asyncChanIsShowToast({
+          msg:'购物车里没有更多商品啦',
+          type:'danger'
+        })
+      }
+    },
+    ...mapActions({
+      asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast"
+    })
     // async goodsSearch(){
     //   var datas = await shujv4;
     //   let id=this.$route.query.id
@@ -157,7 +169,10 @@ export default {
             display: flex;
             justify-content: space-between;
             img{
+              width: 40%;
+              height: 90%;
               margin-right: 20px;
+              box-shadow: 20px 20px 10px #5D5B5B;
             }
           }
           .details{

@@ -39,11 +39,11 @@ export default {
       }
     },
     SET_CART(state,payload){
-      const{type,id,img,name,price,cale,ml,describe} = payload
+      const{type,id,img,name,price,cale,ml,describe,checked} = payload
       const index = state.cartData.findIndex(item=> Number(item.id) === id)
       if(index===-1){
         state.cartData.push({
-          type,id,img,name,price,cale,ml,describe,totalMount:1,totalPrice:price
+          type,id,img,name,price,cale,ml,describe,checked,totalMount:1,totalPrice:price
         })
       }else{
         switch(type){

@@ -32,7 +32,7 @@ import tz from './four/tongzhi.vue'
 import shopcart from './four/shopcart.vue'
 import order from './four/orders.vue'
 import userinfo from './four/userinfo.vue'
-import store, { mapMutations, mapState } from 'vuex'
+import store, { mapActions, mapMutations, mapState } from 'vuex'
 export default {
   data(){
     return {
@@ -57,13 +57,13 @@ export default {
       localStorage.removeItem('x-auth-token')
       setTimeout(()=>{
         this.$router.push('/home')
-      },2000)
+      },1500)
       this.asyncChanIsShowToast({
         msg:'您已退出',
         type:'success'
       })
     },
-    ...mapMutations({
+    ...mapActions({
         asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast",
     })
   },

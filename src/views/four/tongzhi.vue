@@ -1,6 +1,5 @@
 <template>
   <div class="tongzhi">
-    <Header></Header>
     <div class="small">
       <div>
         <img src="@/assets/img/通知.png" alt=""><span>暂无通知</span>
