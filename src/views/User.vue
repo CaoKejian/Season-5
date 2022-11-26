@@ -3,8 +3,8 @@
     <div class="userwrapper">
       <div class="userinfo">
         <div class="username">
-          <img src="../assets/img/jianhao.png" alt="">
-          <h3>账号昵称</h3>
+          <img :src="userInfo.headImg" alt="">
+          <h3>{{userInfo.nickName}}</h3>
         </div>
         <div class="userbigcard">
           <div class="xuanxiangka" @click="changeshow(index)" :class="num1==index?'active':''" v-for="(item,index) in cardarr" :key="index">
@@ -13,7 +13,7 @@
             </ul>
           </div>
         </div>
-        <div class="userexit"><button>退出登录</button></div>
+        <div class="userexit"><button @click="loginOutFn">退出登录</button></div>
       </div>
       <div class="usercard">
         <div>
@@ -32,7 +32,7 @@ import tz from './four/tongzhi.vue'
 import shopcart from './four/shopcart.vue'
 import order from './four/orders.vue'
 import userinfo from './four/userinfo.vue'
-import store from 'vuex'
+import store, { mapMutations, mapState } from 'vuex'
 export default {
   data(){
     return {
@@ -53,7 +53,24 @@ export default {
       this.num1 = idnex
   
     },
-
+    loginOutFn(){
+      localStorage.removeItem('x-auth-token')
+      setTimeout(()=>{
+        this.$router.push('/home')
+      },2000)
+      this.asyncChanIsShowToast({
+        msg:'您已退出',
+        type:'success'
+      })
+    },
+    ...mapMutations({
+        asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast",
+    })
+  },
+  computed:{
+    ...mapState({
+      userInfo:state=>state.userInfo.userInfo
+    })
   },
   beforeRouteEnter (to, from, next) {
     let token = localStorage.getItem("x-auth-token")
@@ -97,6 +114,7 @@ export default {
   h3{
     color: #fff;
     font-weight: normal;
+    margin-top: 5px;
   }
   img{
       width: 50%;
