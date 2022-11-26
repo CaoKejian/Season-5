@@ -2,36 +2,43 @@
   <div class="wrapper">
     <div class="center">
       <div class="all">
-        <div v-show="!cartarr.length==0">
+        <div v-show="!cartData.length==0">
           <input type="checkbox">
           <span>全选</span>
         </div>
       </div>
-      <div class="shopcard" v-show="!cartarr.length==0">
+      <div class="shopcard" v-show="!cartData.length==0">
           <ul >
-            <li v-for="(item,index) in cartarr" :key="index">
+            <li v-for="(item,index) in cartData" :key="index">
               <input type="checkbox">
-              <img :src="item.img" alt="">
-              <div class="details">
-                <span class="detailsname">{{item.name}}</span>
-                <span class="ml">规格： {{item.ml}}ml</span>
-                <span class="bold">￥ {{item.price}}</span>
+              <div class="goodsdetails">
+                <img :src="item.img" alt="">
+                <div class="details">
+                  <span class="detailsname">{{item.name}}</span>
+                  <span class="ml">规格： {{item.ml}}ml</span>
+                  <span class="bold">￥ {{item.price}}</span>
+                </div>
               </div>
-              <span class="count">￥ {{  item.price*count }}</span>
-              <add class="add" :count="count"></add>
+             <span class="num">数量：{{totalMount}}</span>
+              <Add class="Add"
+                :id='Number(item.id)'
+                :totalMount='item.totalMount'
+                :price="item.price"
+              ></Add>
+              <span class="count">￥ {{  item.price*totalMount }}</span>
             </li>
           </ul>
       </div>
-      <div class="shopcreate" v-show="cartarr.length==0">
+      <div class="shopcreate" v-show="cartData.length==0">
         <img src="https://th.bing.com/th/id/OIP.uL2FtUkjoFVuhTU9WjM6_QAAAA?pid=ImgDet&rs=1" alt="">
         <br>购物车空空如也......
       </div>
       <div>
         <div class="fake"></div>
         <div class="computed">
-          <div class="allprice">共计：<span></span>元</div>
+          <div class="allprice">共计：<span>{{totalPrice}}</span>元</div>
           <div class="button">
-            <button @click="name">删除</button>
+            <button >删除</button>
             <button>付款</button>
           </div>
         </div>
@@ -41,52 +48,55 @@
 </template>
 
 <script>
-import add from '@/components/shop/add.vue'
 import bus from "@/utils/bus"
 import details from './Details.vue'
 import shujv4 from '@/static/data.json'
-import {mapState,mapGetters} from 'vuex'
+import Add from '../components/shop/add.vue'
+import {mapState} from 'vuex'
 
 export default {
   name:'Shopcart',
   data(){
     return{
-      count:1,
-      cartarr:[],
     }
   },
-  components:{add},
+  components:{
+    Add
+  },
   methods:{
-    name(){
-      let v = details.props.abc.default()
-      console.log(v);
-      
-    },
-    async goodsSearch(){
-      var datas = await shujv4;
-      let id=this.$route.query.id
-      this.cartarr=datas
-      this.cartarr = this.cartarr.filter((item)=>item.id==id)
-    }
+
+    // async goodsSearch(){
+    //   var datas = await shujv4;
+    //   let id=this.$route.query.id
+    //   this.cartarr=datas
+    //   this.cartarr = this.cartarr.filter((item)=>item.id==id)
+    // }
     // ····················1、现在只有一个数据能加载购物车里
     // ····················2、保存在本地数据里...是一种方法但是需要逻辑
   },
   computed:{
     // ·····························vuex始终接不到详情页给的数据 
-    // ...mapState({
-    //   cartarr:state=>state.cartarry
-    // }),
-    
+    ...mapState({
+      totalPrice:state=>state.addcart.totalPrice,
+      cartData:state=>state.addcart.cartData,
+      totalMount:state=>state.addcart.totalMount
+    })    
   },
   created(){
-    this.goodsSearch()
+    // this.goodsSearch()
   },
   mounted(){
     // bus.$emit('name',(productId)=>{
     //   console.log(productId);
     // })
+    this.$store.dispatch('setData')
   },
-}
+  updated(){
+      localStorage.setItem('totalMount',this.totalMount)
+      localStorage.setItem('totalPrice',this.totalPrice)
+      localStorage.setItem('cartData',JSON.stringify(this.cartData))
+    },
+  }
 </script>
 
 <style lang="less" scoped>
@@ -106,7 +116,7 @@ export default {
         float: left;
         display: flex;
         justify-content: space-around;
-        margin: 10px 50px;
+        margin: 10px 0px;
         input{
           width: 24px;
           height: 24px;
@@ -129,8 +139,7 @@ export default {
       border-bottom: 1px solid #D8D8D8;
       padding-top: 10px;
       ul{
-        width: 80%;
-        margin: 0 auto;
+        width: 100%;
         border-bottom: 1px solid #8f8c8c;
         li{
           display: flex;
@@ -142,6 +151,14 @@ export default {
             height: 24px;
             cursor: pointer;
             margin-top: 50px;
+          }
+          .goodsdetails{
+            width: 380px;
+            display: flex;
+            justify-content: space-between;
+            img{
+              margin-right: 20px;
+            }
           }
           .details{
             display: flex;
@@ -168,6 +185,12 @@ export default {
               font-size: 18px;
             }
           }
+          .num{
+            user-select: none;
+            height: 20px;
+            margin: auto 0;
+            color: #fff;
+          }
           .count{
             user-select: none;
             display: block;
@@ -175,7 +198,7 @@ export default {
             margin: auto 0;
             color: #fff;
           }
-          .add{
+          .Add{
             margin: auto 0;
             transform: translateY(-20%);
           }

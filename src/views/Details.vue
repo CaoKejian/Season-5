@@ -20,12 +20,11 @@
                             {{item.describe}}
                         </span>
                         <div class="shopcartadd">
-                            <add class="add"  :count="count"></add>
                             <!-- <div @click="stepFn(-1)">-</div>
                             <div class="bujinqi" :count="count">{{count}}</div>
                             <div @click="stepFn(1)">+</div> -->
                             <div class="addshopcart">
-                                <button @click="addToCart($event,item)">加入购物车</button>
+                                <button @click="addToCart(item,'PLUS')">加入购物车</button>
                                 <button>立即购买</button>
                             </div>
                         </div>
@@ -90,7 +89,6 @@ import shujv3 from '@/static/data.json'
 import {GoodsDetailsAPI} from '@/request/api'
 import { mapActions,mapMutations, mapState } from 'vuex'
 import { getRandom } from "@/utils";
-import add from '@/components/shop/add.vue'
 import bus from '../utils/bus'
 export default {
     data(){
@@ -114,41 +112,47 @@ export default {
     //         default: 0
     //     }
     // },
-    components:{
-        add
-    },
+
     methods:{
         ...mapActions({
             asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast"
         }),
-        ...mapMutations({
-            tocart:'addcart/tocart'
-        }),
         returnGo(){
             this.$router.go(-1)
         },
-        addToCart(e,item,count){
-            console.log('item:',item);
-            let productId = this.$route.query.id
+        addToCart(data,type){
             this.asyncChanIsShowToast({
                 type:"success",
                 msg:"加入购物车成功 !"
             })
-            this.$store.commit('addcart/tocart',item)
-            
-            this.$router.push({
-                path:'shopcart',
-                query:{
-                    id:productId,
-                    total:this.count
-                }
+            this.$store.dispatch('setTotal',{
+                type,
+                price:data.price,
             })
+            this.$store.dispatch('setCart',{
+                type,
+                id:Number(data.id),
+                img:data.img,
+                name:data.name,
+                price:Number(data.price),
+                cale:data.cale,
+                ml:data.ml,
+                describe:data.describe,
+            })
+            // this.$router.push({
+            //     path:'shopcart',
+            //     query:{
+            //         id:productId,
+            //         total:this.count
+            //     }
+            // })
 
         },
         async goodsSearch(){
             var datas = await shujv3;
             this.suggestarr = datas;
             this.suggestNewarr = datas;
+            localStorage.setItem('datas',JSON.stringify(datas))
             let goodId = this.$route.query.id 
             this.suggestarr = this.suggestarr.filter((item)=>item.id==goodId)
             // ············通过id的查找索引出现问题 待解决····································
@@ -172,6 +176,9 @@ export default {
         ...mapState({
             
         })
+    },
+    mounted(){
+        this.$store.dispatch('setData')
     },
     created(){
         this.goodsSearch()

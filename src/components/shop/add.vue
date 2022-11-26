@@ -1,47 +1,46 @@
 <template>
   <div class="wrapperadd">
     <div>
-        <div><img src="@/assets/img/jianhao.png" @click="handleSub" alt=""></div>
-        <input type="text" v-model="count"></input>
-        <div><img src="@/assets/img/jiahao.png" @click="handleAdd" alt=""></div>
+        <div><img src="@/assets/img/jianhao.png" @click="setCartItem(id,price,'MINUS')" alt=""></div>
+        <input class="input" :value="totalMount"></input>
+        <div><img src="@/assets/img/jiahao.png" @click="setCartItem(id,price,'PLUS')" alt=""></div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data(){
     return{
     }
   },
   props:{
-    count:{
-      type:Number,
-      required:true
-    }
+    id:Number,
+    totalMount:Number,
+    price:Number
   },
   methods:{
-    handleSub(){
-      if(this.count>1){
-        this.count--
-      }else{
-        this.asyncChanIsShowToast({
-          type:'danger',
-          msg:'加入发生错误'
-        })
-      }
+    setCartItem(id,price,type){
+      this.$store.dispatch('setTotal',{
+        type,
+        price
+      })
+      this.$store.dispatch('setCart',{
+        id,
+        price,
+        type
+      })
     },
-    handleAdd(){
-      if(this.count){
-        this.count++
-      }
-    },
-
     ...mapActions({
       asyncChanIsShowToast:"toastStatus/asyncChanIsShowToast"
     }),
-  }
+  },
+  computed:{
+    ...mapState({
+      totalMount:state=>state.addcart.totalMount,
+    })
+  },
 }
 </script>
 
@@ -66,6 +65,10 @@ export default {
       text-align: center;
       font-size: 18px;
       border: none;
+      span{
+        margin: 0 auto;
+        line-height: 30px;
+      }
     }
   }
 }

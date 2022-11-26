@@ -9,7 +9,7 @@
                 <li @click="$router.push('/home')"><i class="iconfont icon-shouye"></i><span>首页</span></li>
                 <li @click="$router.push('/goods')"><i class="iconfont icon-31quanbushangpin"></i><span>全部商品</span></li>
                 <li @click="$router.push('/user')&&sign()"><i class="iconfont icon-gerenzhongxin"></i><span>个人中心</span></li>
-                <li @click="$router.push('/shopcart')"><i class="iconfont icon-gouwuche"></i><span>购物车</span></li>
+                <li @click="$router.push('/shopcart')"><i class="iconfont icon-gouwuche"></i><span>购物车({{totalMount}})</span></li>
                 <li  @click="hdClick()">
                     <button v-show="!isLogined" class="login" @click="chanIsShowLoginModal(true)">登陆 - login</button>
                     <div class="input-img" v-show="isLogined">
@@ -26,11 +26,12 @@
 <script>
 import {mapMutations,mapState,mapActions} from 'vuex'
 import {WeixinLoginAPI} from '../request/api'
+
 export default {
     name:'Top',
     data(){
       return{
-
+        // totalMount:0
       }
     },
     watch:{
@@ -132,9 +133,16 @@ export default {
     computed:{
       ...mapState({
         isLogined:state=>state.loginStatus.isLogined,
-        cartTotal:state=>state.userInfo.cartTotal,
+        totalMount:state=>state.addcart.totalMount,
+        totalPrice:state=>state.addcart.totalPrice,
+        cartData:state=>state.addcart.cartData,
         userInfo:state=>state.userInfo.userInfo,
-      })
+      }),
+    },
+    updated(){
+      localStorage.setItem('totalMount',this.totalMount)
+      localStorage.setItem('totalPrice',this.totalPrice)
+      localStorage.setItem('cartData',JSON.stringify(this.cartData))
     },
     methods:{
       ...mapMutations({
