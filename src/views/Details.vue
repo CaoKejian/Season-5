@@ -464,6 +464,7 @@ export default {
             p{
                 line-height: 1.4em;
                 text-indent: 1em;
+                text-align-last: left;
             }
             a{
                 color: rgb(188, 182, 182);

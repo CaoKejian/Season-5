@@ -30,8 +30,8 @@
           </ul>
       </div>
       <div class="shopcreate" v-show="cartData.length==0">
-        <img src="https://th.bing.com/th/id/OIP.uL2FtUkjoFVuhTU9WjM6_QAAAA?pid=ImgDet&rs=1" alt="">
-        <br>购物车空空如也......
+        <img src="@/assets/img/noorders.png" alt="">
+        <br>购物车空空如也
       </div>
       <div>
         <div class="fake"></div>
@@ -231,11 +231,13 @@ export default {
       width: 100%;
       height: 65vh;
       font-size: 50px;
-      color: rgb(229, 222, 222);
+      color:#767676;
+      padding: 10% 0;
+      font-size: 30px;
       img{
-        width: 500px;
-        height: 100%;
+        width: 100px;
         border-radius: 20px;
+        margin-bottom: 30px;
       }
     }
     .computed{
